@@ -15,7 +15,7 @@
         }
       }
     </script>
-    <!-- React 18 UMD + Babel (demo only, not for prod) -->
+    <!-- React 18 UMD + Babel (demo only) -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -24,18 +24,13 @@
     <div id="root"></div>
 
     <script type="text/babel">
+      /* ---------- small UI helpers ---------- */
       function Section({ id, children }) {
-        return (
-          <section id={id} className="mx-auto max-w-6xl px-4 py-16">{children}</section>
-        );
+        return <section id={id} className="mx-auto max-w-6xl px-4 py-16">{children}</section>;
       }
-
-      function Pill({ children }) {
-        return (
-          <span className="px-2 py-1 rounded border border-iron-line">{children}</span>
-        );
-      }
-
+      const Pill = ({ children }) => (
+        <span className="px-2 py-1 rounded border border-iron-line">{children}</span>
+      );
       function Card({ title, children }) {
         return (
           <div className="p-6 rounded border border-iron-line bg-black/60">
@@ -45,6 +40,7 @@
         );
       }
 
+      /* ---------- sections ---------- */
       function ProblemSolution() {
         return (
           <Section id="problem-solution">
@@ -54,15 +50,39 @@
                 <ul className="list-disc list-inside space-y-2">
                   <li>Multi-cloud bare metal is fragmented: each provider has its own API/CLI.</li>
                   <li>Declarative IaC stacks are heavy for fast, interactive workflows.</li>
-                  <li>GUI dashboards are slow, manual, and not easily automated.</li>
+                  <li>GUI dashboards are slow, manual, and hard to automate.</li>
                 </ul>
               </Card>
               <Card title="Solution — ironbar">
                 <ul className="list-disc list-inside space-y-2">
                   <li>One UNIX-style CLI for Hetzner, OVH, Vultr, DigitalOcean.</li>
-                  <li>Imperative commands: spin up, connect, manage instantly.</li>
-                  <li>Optional SaaS panel: keys, roles, cost tracking, audit logs.</li>
+                  <li>Imperative commands to spin up, connect, and manage instantly.</li>
+                  <li>AI Driven features: roles, cost tracking, and audit logs.</li>
                 </ul>
+              </Card>
+            </div>
+          </Section>
+        );
+      }
+
+      function Market() {
+        return (
+          <Section id="market">
+            <h2 className="text-2xl md:text-3xl font-bold mb-6">Market & Why now</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card title="Tailwinds">
+                <ul className="list-disc list-inside space-y-2">
+                  <li>AI/GPU workloads push teams to real hardware.</li>
+                  <li>Edge computing needs regional bare-metal presence.</li>
+                  <li>Cost pressure makes multi-provider optimization essential.</li>
+                </ul>
+              </Card>
+              <Card title="Opportunity">
+                ironbar targets engineers who want interactive, shell-first workflows across providers —
+                a gap between heavy IaC and GUIs.
+              </Card>
+              <Card title="Go-to-market">
+                OSS CLI for adoption → paid team features (SaaS panel) → optional managed/resell plans for convenience and SLAs.
               </Card>
             </div>
           </Section>
@@ -73,19 +93,13 @@
         const demoCommands = `ironbar server create --provider=hetzner --cpu=amd64 --ram=64G
 ironbar ssh my-server
 ironbar dns add app.cloud`;
-
         const copyDemo = async () => {
           try {
             await navigator.clipboard.writeText(demoCommands);
             const btn = document.getElementById('copy-demo-btn');
-            if (btn) {
-              const t = btn.innerText;
-              btn.innerText = 'Copied!';
-              setTimeout(() => (btn.innerText = t), 1500);
-            }
-          } catch (e) { alert('Copy failed'); }
+            if (btn) { const t = btn.innerText; btn.innerText = 'Copied!'; setTimeout(() => (btn.innerText = t), 1500); }
+          } catch { alert('Copy failed'); }
         };
-
         return (
           <div className="mt-12 rounded border border-iron-line bg-black">
             <div className="flex items-center justify-between px-4 py-2 border-b border-iron-line">
@@ -103,18 +117,10 @@ ironbar dns add app.cloud`;
           <Section id="features">
             <h2 className="text-2xl md:text-3xl font-bold">Features</h2>
             <div className="mt-6 grid md:grid-cols-2 gap-6">
-              <Card title="Multi-provider drivers">
-                Hetzner, OVH, Vultr, DigitalOcean out of the box. Extensible via plugins.
-              </Card>
-              <Card title="Images & repos">
-                Build, store, and roll out your own images. Bootstrap hardware fast.
-              </Card>
-              <Card title="Access control">
-                Centralized SSH keys, roles, SSO in the SaaS panel.
-              </Card>
-              <Card title="Cost & audit (AI-assisted)">
-                Track usage, get provider suggestions, audit logs by default.
-              </Card>
+              <Card title="Multi-provider drivers">Hetzner, OVH, Vultr, DigitalOcean out of the box. Extensible via plugins.</Card>
+              <Card title="Images & repos">Build, store, and roll out your own images. Bootstrap hardware fast.</Card>
+              <Card title="Access control">Centralized SSH keys, roles, SSO in the SaaS panel.</Card>
+              <Card title="Cost & audit (AI-driven)">Track usage, provider suggestions, and audit logs by default.</Card>
             </div>
           </Section>
         );
@@ -124,14 +130,48 @@ ironbar dns add app.cloud`;
         return (
           <Section id="why">
             <div className="grid md:grid-cols-3 gap-6">
-              <Card title="Heavy configs">
-                Declarative stacks are powerful but heavy. ironbar is lightweight and interactive.
+              <Card title="Heavy configs">Declarative stacks are powerful but heavy. ironbar is lightweight and interactive.</Card>
+              <Card title="No dashboards">Less clicking, more shipping. Keep hands on the keyboard.</Card>
+              <Card title="Unified workflow">One tool, multiple providers. Same syntax. Predictable results.</Card>
+            </div>
+          </Section>
+        );
+      }
+
+      function Roadmap() {
+        const items = [
+          { when: 'Q4 2025', what: 'Hetzner + OVH drivers, CLI beta' },
+          { when: 'Q1 2026', what: 'SaaS panel v1: keys, cost tracking, team roles' },
+          { when: 'Q2 2026', what: 'Plugin SDK, Scaleway + GPU providers' },
+        ];
+        return (
+          <Section id="roadmap">
+            <h2 className="text-2xl md:text-3xl font-bold mb-6">12-month roadmap</h2>
+            <div className="grid gap-4">
+              {items.map(i => (
+                <div key={i.when} className="flex items-start gap-4 p-4 rounded border border-iron-line">
+                  <div className="shrink-0 px-3 py-1 rounded bg-emerald-600 text-black">{i.when}</div>
+                  <div className="text-green-300">{i.what}</div>
+                </div>
+              ))}
+            </div>
+          </Section>
+        );
+      }
+
+      function Team() {
+        return (
+          <Section id="team">
+            <h2 className="text-2xl md:text-3xl font-bold mb-6">Team</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card title="Background">
+                Founder with DevOps & open-source experience; advisors from cloud infrastructure and startup ops.
               </Card>
-              <Card title="No dashboards">
-                Forget endless clicking. Run servers like shell commands.
+              <Card title="Focus">
+                Terminal-first UX, provider-agnostic drivers, secure key management, and cost visibility.
               </Card>
-              <Card title="Unified workflow">
-                Multiple providers. Same syntax. Predictable results.
+              <Card title="Hiring plan">
+                Year 1: 1–2 senior engineers (drivers & control plane), part-time DevRel, fractional design.
               </Card>
             </div>
           </Section>
@@ -172,8 +212,8 @@ ironbar dns add app.cloud`;
         return (
           <Section id="cta">
             <div className="rounded border border-iron-line p-8 md:p-12 bg-black">
-              <h2 className="text-2xl md:text-3xl font-bold">Run bare-metal like any other shell command</h2>
-              <p className="mt-2 text-green-300">Spin up, connect, and manage servers across providers — all from your terminal.</p>
+              <h2 className="text-2xl md:text-3xl font-bold">Run bare-metal like any other shell objects</h2>
+              <p className="mt-2 text-green-300">Buy, Deploy, Connect, and manage servers across providers — all from your terminal.</p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <button className="px-4 py-2.5 rounded bg-emerald-600 text-black hover:bg-emerald-500">Download CLI</button>
                 <button className="px-4 py-2.5 rounded border border-iron-line hover:bg-emerald-900/30">Docs</button>
@@ -200,7 +240,9 @@ ironbar dns add app.cloud`;
                 <button className="px-4 py-2.5 rounded border border-iron-line hover:bg-emerald-900/30">Join Slack</button>
               </div>
             </div>
+
             <Demo />
+
             <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-green-400">
               <span># works with:</span>
               <Pill>Hetzner</Pill><Pill>OVH</Pill><Pill>Vultr</Pill><Pill>DigitalOcean</Pill>
@@ -220,7 +262,10 @@ ironbar dns add app.cloud`;
               <nav className="hidden md:flex items-center gap-6 text-sm">
                 <a href="#why" className="hover:text-white">Why</a>
                 <a href="#problem-solution" className="hover:text-white">Problem ↦ Solution</a>
+                <a href="#market" className="hover:text-white">Market</a>
                 <a href="#features" className="hover:text-white">Features</a>
+                <a href="#roadmap" className="hover:text-white">Roadmap</a>
+                <a href="#team" className="hover:text-white">Team</a>
                 <a href="#pricing" className="hover:text-white">Pricing</a>
                 <a href="#cta" className="hover:text-white">Get Started</a>
               </nav>
@@ -256,7 +301,10 @@ ironbar dns add app.cloud`;
             <Hero />
             <Why />
             <ProblemSolution />
+            <Market />
             <Features />
+            <Roadmap />
+            <Team />
             <Pricing />
             <CTA />
             <Footer />
