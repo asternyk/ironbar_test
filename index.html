@@ -4,21 +4,72 @@
     <meta charset="utf-8" />
     <title>ironbar — UNIX shell landing</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <!-- Tailwind via CDN (JIT) -->
+    <!-- Tailwind via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      tailwind.config = { theme: { extend: { colors: { iron: { bg: "#000000", fg: "#22c55e" }}}}}
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { iron: { bg: "#000000", fg: "#22c55e", line: "#14532d" } }
+          }
+        }
+      }
     </script>
-    <!-- React 18 UMD + Babel for JSX-in-browser (ok for demo) -->
+    <!-- React 18 UMD + Babel (для демо без сборки) -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   </head>
-  <body class="bg-black text-green-400 font-mono">
+  <body class="bg-iron-bg text-iron-fg font-mono">
     <div id="root"></div>
 
     <script type="text/babel">
-      function IronbarLanding() {
+      function Section({ id, children }) {
+        return (
+          <section id={id} className="mx-auto max-w-6xl px-4 py-16">{children}</section>
+        );
+      }
+
+      function Pill({ children }) {
+        return (
+          <span className="px-2 py-1 rounded border border-iron-line">{children}</span>
+        );
+      }
+
+      function Card({ title, children }) {
+        return (
+          <div className="p-6 rounded border border-iron-line bg-black/60">
+            <h3 className="font-bold text-lg mb-2">{title}</h3>
+            <div className="text-green-300">{children}</div>
+          </div>
+        );
+      }
+
+      function ProblemSolution() {
+        return (
+          <Section id="problem-solution">
+            <h2 className="text-2xl md:text-3xl font-bold mb-6">Problem → Solution</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card title="Problem">
+                <ul className="list-disc list-inside space-y-2">
+                  <li>Multi-cloud bare metal fragmented: каждый провайдер со своим API/CLI.</li>
+                  <li>Declarative IaC stacks — тяжеловесны для быстрых интерактивных задач.</li>
+                  <li>GUI-дашборды медленные, ручные и плохо автоматизируются.</li>
+                </ul>
+              </Card>
+              <Card title="Solution — ironbar">
+                <ul className="list-disc list-inside space-y-2">
+                  <li>Единый UNIX-style CLI для Hetzner, OVH, Vultr, DigitalOcean.</li>
+                  <li>Императивные команды: мгновенно поднять/подключиться/управлять.</li>
+                  <li>Опциональная SaaS-панель: ключи, роли, cost-tracking, audit.</li>
+                </ul>
+              </Card>
+            </div>
+          </Section>
+        );
+      }
+
+      function Demo() {
         const demoCommands = `ironbar server create --provider=hetzner --cpu=amd64 --ram=64G
 ironbar ssh my-server
 ironbar dns add app.cloud`;
@@ -36,71 +87,186 @@ ironbar dns add app.cloud`;
         };
 
         return (
-          <div className="min-h-screen">
-            {/* Header */}
-            <header className="sticky top-0 z-30 bg-black border-b border-green-800">
-              <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="font-bold tracking-tight">[&gt;_ ]</span>
-                  <span className="font-bold tracking-tight">ironbar.io</span>
-                </div>
-                <nav className="hidden md:flex items-center gap-6 text-sm">
-                  <a href="#why" className="hover:text-white">Why</a>
-                  <a href="#features" className="hover:text-white">Features</a>
-                  <a href="#pricing" className="hover:text-white">Pricing</a>
-                  <a href="#cta" className="hover:text-white">Get Started</a>
-                </nav>
-                <div className="flex items-center gap-2">
-                  <button className="px-3 py-1.5 rounded bg-green-700 text-black text-sm hover:bg-green-600">Download</button>
-                  <button className="px-3 py-1.5 rounded border border-green-700 text-sm hover:bg-green-800">GitHub</button>
-                </div>
-              </div>
-            </header>
-
-            {/* Hero */}
-            <section className="relative">
-              <div className="mx-auto max-w-6xl px-4 py-20">
-                <div className="max-w-3xl">
-                  <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
-                    ironbar: unified CLI for <span className="underline decoration-green-500 decoration-2 underline-offset-4">bare-metal</span>
-                  </h1>
-                  <p className="mt-6 text-lg text-green-300">
-                    Hetzner, OVH, Vultr, DigitalOcean — one shell, one flow. No configs. No dashboards. Just commands.
-                  </p>
-                  <div className="mt-8 flex flex-wrap gap-3">
-                    <button className="px-4 py-2.5 rounded bg-green-700 text-black hover:bg-green-600">Download CLI</button>
-                    <button className="px-4 py-2.5 rounded border border-green-700 hover:bg-green-800">Open on GitHub</button>
-                    <button className="px-4 py-2.5 rounded border border-green-700 hover:bg-green-800">Join Slack</button>
-                  </div>
-                </div>
-
-                {/* Demo block */}
-                <div className="mt-12 rounded border border-green-700 bg-black">
-                  <div className="flex items-center justify-between px-4 py-2 border-b border-green-700">
-                    <span className="text-sm">demo.sh</span>
-                    <button id="copy-demo-btn" onClick={copyDemo} className="text-sm px-3 py-1.5 rounded border border-green-700 hover:bg-green-800">Copy</button>
-                  </div>
-                  <pre className="overflow-x-auto p-4 text-sm md:text-base leading-7">{demoCommands}</pre>
-                </div>
-
-                {/* Provider badges */}
-                <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-green-400">
-                  <span># works with:</span>
-                  <span className="px-2 py-1 rounded border border-green-700">Hetzner</span>
-                  <span className="px-2 py-1 rounded border border-green-700">OVH</span>
-                  <span className="px-2 py-1 rounded border border-green-700">Vultr</span>
-                  <span className="px-2 py-1 rounded border border-green-700">DigitalOcean</span>
-                </div>
-              </div>
-            </section>
-
-            {/* …оставил why/features/pricing/cta/footer как в макете… */}
+          <div className="mt-12 rounded border border-iron-line bg-black">
+            <div className="flex items-center justify-between px-4 py-2 border-b border-iron-line">
+              <span className="text-sm">demo.sh</span>
+              <button id="copy-demo-btn" onClick={copyDemo}
+                className="text-sm px-3 py-1.5 rounded border border-iron-line hover:bg-emerald-900/30">Copy</button>
+            </div>
+            <pre className="overflow-x-auto p-4 text-sm md:text-base leading-7">{demoCommands}</pre>
           </div>
         );
       }
 
-      const root = ReactDOM.createRoot(document.getElementById('root'));
-      root.render(<IronbarLanding />);
+      function Features() {
+        return (
+          <Section id="features">
+            <h2 className="text-2xl md:text-3xl font-bold">Features</h2>
+            <div className="mt-6 grid md:grid-cols-2 gap-6">
+              <Card title="Multi-provider drivers">
+                Hetzner, OVH, Vultr, DigitalOcean «из коробки». Расширяемо плагинами.
+              </Card>
+              <Card title="Images & repos">
+                Сборка, хранение и раскатка собственных образов. Bootstrap за минуты.
+              </Card>
+              <Card title="Access control">
+                Централизованные SSH-ключи, роли, SSO в SaaS-панели.
+              </Card>
+              <Card title="Cost & audit (AI-assisted)">
+                Трекинг затрат, подсказки по провайдерам, журналы аудита по умолчанию.
+              </Card>
+            </div>
+          </Section>
+        );
+      }
+
+      function Why() {
+        return (
+          <Section id="why">
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card title="Heavy configs">
+                Declarative stacks мощные, но тяжёлые. ironbar — про скорость и интерактив.
+              </Card>
+              <Card title="No dashboards">
+                Меньше кликов — больше команд. Держим руки на клавиатуре.
+              </Card>
+              <Card title="Unified workflow">
+                Один инструмент — разные провайдеры. Предсказуемые результаты.
+              </Card>
+            </div>
+          </Section>
+        );
+      }
+
+      function Pricing() {
+        const tiers = [
+          { name: 'Starter', price: '$29/mo', items: ['Up to 3 members','Key management','Basic tracking'] },
+          { name: 'Team',    price: '$59/mo', items: ['Up to 10 members','Roles & SSO','Audit logs'] },
+          { name: 'Pro',     price: '$99/mo', items: ['Unlimited members','API access','AI suggestions'] },
+        ];
+        return (
+          <Section id="pricing">
+            <h2 className="text-2xl md:text-3xl font-bold">Pricing</h2>
+            <p className="mt-2 text-green-300">CLI is free for a few machines. Upgrade when your team grows.</p>
+            <div className="mt-6 grid md:grid-cols-3 gap-6">
+              {tiers.map(t => (
+                <div key={t.name} className="p-6 rounded border border-iron-line flex flex-col">
+                  <div className="flex-1">
+                    <h3 className="font-bold text-lg">{t.name}</h3>
+                    <div className="mt-2 text-3xl font-bold">{t.price}</div>
+                    <ul className="mt-4 space-y-2 text-green-300 text-sm list-disc list-inside">
+                      {t.items.map(i => <li key={i}>{i}</li>)}
+                    </ul>
+                  </div>
+                  <button className="mt-6 px-4 py-2.5 rounded border border-iron-line hover:bg-emerald-900/30">
+                    Choose {t.name}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </Section>
+        );
+      }
+
+      function CTA() {
+        return (
+          <Section id="cta">
+            <div className="rounded border border-iron-line p-8 md:p-12 bg-black">
+              <h2 className="text-2xl md:text-3xl font-bold">Run bare-metal like any other shell command</h2>
+              <p className="mt-2 text-green-300">Spin up, connect, and manage servers across providers — all from your terminal.</p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <button className="px-4 py-2.5 rounded bg-emerald-600 text-black hover:bg-emerald-500">Download CLI</button>
+                <button className="px-4 py-2.5 rounded border border-iron-line hover:bg-emerald-900/30">Docs</button>
+                <button className="px-4 py-2.5 rounded border border-iron-line hover:bg-emerald-900/30">Join Slack</button>
+              </div>
+            </div>
+          </Section>
+        );
+      }
+
+      function Hero() {
+        return (
+          <section className="mx-auto max-w-6xl px-4 py-20">
+            <div className="max-w-3xl">
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
+                ironbar: unified CLI for <span className="underline decoration-emerald-500 decoration-2 underline-offset-4">bare-metal</span>
+              </h1>
+              <p className="mt-6 text-lg text-green-300">
+                Hetzner, OVH, Vultr, DigitalOcean — one shell, one flow. No configs. No dashboards. Just commands.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <button className="px-4 py-2.5 rounded bg-emerald-600 text-black hover:bg-emerald-500">Download CLI</button>
+                <button className="px-4 py-2.5 rounded border border-iron-line hover:bg-emerald-900/30">Open on GitHub</button>
+                <button className="px-4 py-2.5 rounded border border-iron-line hover:bg-emerald-900/30">Join Slack</button>
+              </div>
+            </div>
+
+            <Demo />
+
+            <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-green-400">
+              <span># works with:</span>
+              <Pill>Hetzner</Pill><Pill>OVH</Pill><Pill>Vultr</Pill><Pill>DigitalOcean</Pill>
+            </div>
+          </section>
+        );
+      }
+
+      function Header() {
+        return (
+          <header className="sticky top-0 z-30 bg-black border-b border-iron-line">
+            <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="font-bold tracking-tight">[&gt;_ ]</span>
+                <span className="font-bold tracking-tight">ironbar.io</span>
+              </div>
+              <nav className="hidden md:flex items-center gap-6 text-sm">
+                <a href="#why" className="hover:text-white">Why</a>
+                <a href="#problem-solution" className="hover:text-white">Problem ↦ Solution</a>
+                <a href="#features" className="hover:text-white">Features</a>
+                <a href="#pricing" className="hover:text-white">Pricing</a>
+                <a href="#cta" className="hover:text-white">Get Started</a>
+              </nav>
+              <div className="flex items-center gap-2">
+                <button className="px-3 py-1.5 rounded bg-emerald-600 text-black text-sm hover:bg-emerald-500">Download</button>
+                <button className="px-3 py-1.5 rounded border border-iron-line text-sm hover:bg-emerald-900/30">GitHub</button>
+              </div>
+            </div>
+          </header>
+        );
+      }
+
+      function Footer() {
+        return (
+          <footer className="border-t border-iron-line">
+            <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-green-400 flex flex-wrap items-center justify-between gap-4">
+              <div>© {new Date().getFullYear()} ironbar.io</div>
+              <div className="flex items-center gap-4">
+                <a className="hover:text-white" href="#">Docs</a>
+                <a className="hover:text-white" href="#">Security</a>
+                <a className="hover:text-white" href="#">Privacy</a>
+                <a className="hover:text-white" href="#">Terms</a>
+              </div>
+            </div>
+          </footer>
+        );
+      }
+
+      function App() {
+        return (
+          <div className="min-h-screen">
+            <Header />
+            <Hero />
+            <Why />
+            <ProblemSolution />
+            <Features />
+            <Pricing />
+            <CTA />
+            <Footer />
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
   </body>
 </html>
