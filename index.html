@@ -15,7 +15,7 @@
         }
       }
     </script>
-    <!-- React 18 UMD + Babel (для демо без сборки) -->
+    <!-- React 18 UMD + Babel (demo only, not for prod) -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -52,16 +52,16 @@
             <div className="grid md:grid-cols-2 gap-6">
               <Card title="Problem">
                 <ul className="list-disc list-inside space-y-2">
-                  <li>Multi-cloud bare metal fragmented: каждый провайдер со своим API/CLI.</li>
-                  <li>Declarative IaC stacks — тяжеловесны для быстрых интерактивных задач.</li>
-                  <li>GUI-дашборды медленные, ручные и плохо автоматизируются.</li>
+                  <li>Multi-cloud bare metal is fragmented: each provider has its own API/CLI.</li>
+                  <li>Declarative IaC stacks are heavy for fast, interactive workflows.</li>
+                  <li>GUI dashboards are slow, manual, and not easily automated.</li>
                 </ul>
               </Card>
               <Card title="Solution — ironbar">
                 <ul className="list-disc list-inside space-y-2">
-                  <li>Единый UNIX-style CLI для Hetzner, OVH, Vultr, DigitalOcean.</li>
-                  <li>Императивные команды: мгновенно поднять/подключиться/управлять.</li>
-                  <li>Опциональная SaaS-панель: ключи, роли, cost-tracking, audit.</li>
+                  <li>One UNIX-style CLI for Hetzner, OVH, Vultr, DigitalOcean.</li>
+                  <li>Imperative commands: spin up, connect, manage instantly.</li>
+                  <li>Optional SaaS panel: keys, roles, cost tracking, audit logs.</li>
                 </ul>
               </Card>
             </div>
@@ -104,16 +104,16 @@ ironbar dns add app.cloud`;
             <h2 className="text-2xl md:text-3xl font-bold">Features</h2>
             <div className="mt-6 grid md:grid-cols-2 gap-6">
               <Card title="Multi-provider drivers">
-                Hetzner, OVH, Vultr, DigitalOcean «из коробки». Расширяемо плагинами.
+                Hetzner, OVH, Vultr, DigitalOcean out of the box. Extensible via plugins.
               </Card>
               <Card title="Images & repos">
-                Сборка, хранение и раскатка собственных образов. Bootstrap за минуты.
+                Build, store, and roll out your own images. Bootstrap hardware fast.
               </Card>
               <Card title="Access control">
-                Централизованные SSH-ключи, роли, SSO в SaaS-панели.
+                Centralized SSH keys, roles, SSO in the SaaS panel.
               </Card>
               <Card title="Cost & audit (AI-assisted)">
-                Трекинг затрат, подсказки по провайдерам, журналы аудита по умолчанию.
+                Track usage, get provider suggestions, audit logs by default.
               </Card>
             </div>
           </Section>
@@ -125,13 +125,13 @@ ironbar dns add app.cloud`;
           <Section id="why">
             <div className="grid md:grid-cols-3 gap-6">
               <Card title="Heavy configs">
-                Declarative stacks мощные, но тяжёлые. ironbar — про скорость и интерактив.
+                Declarative stacks are powerful but heavy. ironbar is lightweight and interactive.
               </Card>
               <Card title="No dashboards">
-                Меньше кликов — больше команд. Держим руки на клавиатуре.
+                Forget endless clicking. Run servers like shell commands.
               </Card>
               <Card title="Unified workflow">
-                Один инструмент — разные провайдеры. Предсказуемые результаты.
+                Multiple providers. Same syntax. Predictable results.
               </Card>
             </div>
           </Section>
@@ -200,9 +200,7 @@ ironbar dns add app.cloud`;
                 <button className="px-4 py-2.5 rounded border border-iron-line hover:bg-emerald-900/30">Join Slack</button>
               </div>
             </div>
-
             <Demo />
-
             <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-green-400">
               <span># works with:</span>
               <Pill>Hetzner</Pill><Pill>OVH</Pill><Pill>Vultr</Pill><Pill>DigitalOcean</Pill>
